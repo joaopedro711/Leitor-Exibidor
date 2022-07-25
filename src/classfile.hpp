@@ -1,4 +1,3 @@
-
 // ESTRUTURA INTERNA DE ARQUIVO .CLASS
 // Pego do PDF "especificação do formato .class"
 
