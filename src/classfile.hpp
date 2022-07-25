@@ -1,12 +1,9 @@
-
 // ESTRUTURA INTERNA DE ARQUIVO .CLASS
-// @file estruturasclassfile.hpp
 // Pego do PDF "especificação do formato .class"
 
 #ifndef	ESTRUTURACLASSFILE_H
 #define ESTRUTURACLASSFILE_H
 
-#include <iostream>
 #include "estruturas.hpp"
 	
 //Estrutura ClassFile
