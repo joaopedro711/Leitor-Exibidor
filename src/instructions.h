@@ -6,12 +6,12 @@
 
 #include "estruturas.h"
 
-typedef struct instrucao{
-  char inst_nome[50];
+typedef struct instruction{
+  char instr_name[50];
   u1 opcode;
   u1 numarg;
   int *tipoarg; 
-}instrucao;
+}instruction;
 
 
 typedef enum instrucoes_op {
@@ -44,6 +44,6 @@ typedef enum instrucoes_op {
 
 extern const int contagem_enum;
 
-instrucao* construirInstrucoes(void);
+instruction* InstructionBuild(void);
 
 #endif
