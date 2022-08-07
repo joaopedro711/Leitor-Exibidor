@@ -4,7 +4,7 @@
 #ifndef INSTRUCOES_H
 #define INSTRUCOES_H
 
-#include "estruturas.hpp"
+#include "estruturas.h"
 
 typedef struct instrucao{
   char inst_nome[50];

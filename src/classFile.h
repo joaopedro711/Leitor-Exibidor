@@ -4,7 +4,7 @@
 #ifndef	ESTRUTURACLASSFILE_H
 #define ESTRUTURACLASSFILE_H
 
-#include "estruturas.hpp"
+#include "estruturas.h"
 	
 //Estrutura ClassFile
 typedef struct{
