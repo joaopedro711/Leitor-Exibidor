@@ -10,9 +10,9 @@ typedef uint8_t u1;     //uint8_t       valor da direita representa o numero de 
 typedef uint16_t u2;    //uint16_t      2 bytes (16bits)
 typedef uint32_t u4;    //uint32_t      4 bytes (32bits)
 
-#define MAXIMO_U1 255           // valor maximo para uint8_t
-#define MAXIMO_U2 65535         // valor maximo para uint16_t
-#define MAXIMO_U4 2147483647    // valor maximo para uint32_t
+#define MAX_U1 255           // valor maximo para uint8_t
+#define MAX_U2 65535         // valor maximo para uint16_t
+#define MAX_U4 2147483647    // valor maximo para uint32_t
 
 
 //      abaixo temos a Constant Pool -> contem as constantes que sao necessarias para rodar o codigo das classes
