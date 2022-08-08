@@ -2,7 +2,7 @@
 #include "leitor.h"
 #include <string.h>
 #include <math.h>
-#include "instrucoes.h"
+#include "instructions.h"
 
 
 u1 u1Read(FILE *fp){
@@ -95,59 +95,59 @@ cp_info * readConstantPool (FILE * fp, u2 constant_pool_count) {
 	for (aux = readConstantPool; aux < readConstantPool+constant_pool_count-1; aux++){
 		aux->tag = u1Read(fp);
 		switch(aux->tag) {
-			case VALOR_CONSTANT_Class:
+			case CONSTANT_Class:
 				aux->UnionCP.CONSTANT_Class.name_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_Fieldref:
+			case CONSTANT_Fieldref:
 				aux->UnionCP.CONSTANT_Fieldref.class_index = u2Read(fp);
 				aux->UnionCP.CONSTANT_Fieldref.name_and_type_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_Methodref:
+			case CONSTANT_Methodref:
 				aux->UnionCP.CONSTANT_Methodref.class_index = u2Read(fp);
 				aux->UnionCP.CONSTANT_Methodref.name_and_type_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_InterfaceMethodref:
+			case CONSTANT_InterfaceMethodref:
 				aux->UnionCP.CONSTANT_InterfaceMethodref.class_index = u2Read(fp);
 				aux->UnionCP.CONSTANT_InterfaceMethodref.name_and_type_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_String:
+			case CONSTANT_String:
 				aux->UnionCP.CONSTANT_String.string_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_Integer:
+			case CONSTANT_Integer:
 				aux->UnionCP.CONSTANT_Integer.bytes = u4Read(fp);
 				break;
-			case VALOR_CONSTANT_Float:
+			case CONSTANT_Float:
 				aux->UnionCP.CONSTANT_Float.bytes = u4Read(fp);
 				break;
-			case VALOR_CONSTANT_Long:
+			case CONSTANT_Long:
 				aux->UnionCP.CONSTANT_Long.high_bytes = u4Read(fp);
 				aux->UnionCP.CONSTANT_Long.low_bytes = u4Read(fp);
 				aux++;
 				break;
-			case VALOR_CONSTANT_Double:
+			case CONSTANT_Double:
 				aux->UnionCP.CONSTANT_Double.high_bytes = u4Read(fp);
 				aux->UnionCP.CONSTANT_Double.low_bytes = u4Read(fp);
 				aux++;
 				break;
-			case VALOR_CONSTANT_NameAndType:
+			case CONSTANT_NameAndType:
 				aux->UnionCP.CONSTANT_NameAndType.name_index = u2Read(fp);
 				aux->UnionCP.CONSTANT_NameAndType.descriptor_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_Utf8:
+			case CONSTANT_Utf8:
 				aux->UnionCP.CONSTANT_UTF8.length = u2Read(fp);
 				aux->UnionCP.CONSTANT_UTF8.bytes = malloc(aux->UnionCP.CONSTANT_UTF8.length*sizeof(u1));
 				for (u1 * i = aux->UnionCP.CONSTANT_UTF8.bytes; i <aux->UnionCP.CONSTANT_UTF8.bytes+aux->UnionCP.CONSTANT_UTF8.length; i++){
 					*i = u1Read(fp);
 				}
 				break;
-			case VALOR_CONSTANT_MethodHandle:
+			case CONSTANT_MethodHandle:
 				aux->UnionCP.CONSTANT_MethodHandle.reference_kind = u1Read(fp);
 				aux->UnionCP.CONSTANT_MethodHandle.reference_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_MethodType:
+			case CONSTANT_MethodType:
 				aux->UnionCP.CONSTANT_MethodType.descriptor_index = u2Read(fp);
 				break;
-			case VALOR_CONSTANT_InvokeDynamic:
+			case CONSTANT_InvokeDynamic:
 				aux->UnionCP.CONSTANT_InvokeDynamicInfo.bootstrap_method_attr_index = u2Read(fp);
 				aux->UnionCP.CONSTANT_InvokeDynamicInfo.name_and_type_index = u2Read(fp);
 				break;
@@ -204,7 +204,7 @@ method_info * readMethod (FILE * fp, u2 methods_count, cp_info *cp) {
 	return methods;
 }
 
-char* decodeCode(cp_info *cp, u2 sizeCP, u1 *code, u4 length,instrucao *instrucoes){
+char* decodeCode(cp_info *cp, u2 sizeCP, u1 *code, u4 length,instruction *instrucoes){
 	u1 *aux;
 
 	char *retorno = (char*)malloc(1000*sizeof(char));
@@ -216,7 +216,7 @@ char* decodeCode(cp_info *cp, u2 sizeCP, u1 *code, u4 length,instrucao *instruco
 
 	for(aux=code;aux<code+length;){
 		int numarg = instrucoes[*aux].numarg;
-		strcat(retorno,instrucoes[*aux].inst_nome);
+		strcat(retorno,instrucoes[*aux].instr_name);
 		switch(numarg){
 			case 0:
 				strcat(retorno,"\n");
@@ -490,46 +490,46 @@ source_file_attribute * readSourceFile (FILE * fp) {
 char* searchNameTag(u1 tag){
 	char *nometag = malloc(40*sizeof(char));
 	switch(tag){
-		case VALOR_CONSTANT_Class:
+		case CONSTANT_Class:
 			strcpy(nometag,"CONSTANT_Class_Info");
 			break;
-		case VALOR_CONSTANT_Fieldref:
+		case CONSTANT_Fieldref:
 			strcpy(nometag,"CONSTANT_Fieldref_Info");
 			break;
-		case VALOR_CONSTANT_Methodref:
+		case CONSTANT_Methodref:
 			strcpy(nometag,"CONSTANT_Methodref_Info");
 			break;
-		case VALOR_CONSTANT_InterfaceMethodref:
+		case CONSTANT_InterfaceMethodref:
 			strcpy(nometag,"CONSTANT_InterfaceMethodref_Info");
 			break;
-		case VALOR_CONSTANT_String:
+		case CONSTANT_String:
 			strcpy(nometag,"CONSTANT_String_Info");
 			break;
-		case VALOR_CONSTANT_Integer:
+		case CONSTANT_Integer:
 			strcpy(nometag,"CONSTANT_Integer_Info");
 			break;
-		case VALOR_CONSTANT_Float:
+		case CONSTANT_Float:
 			strcpy(nometag,"CONSTANT_Float_Info");
 			break;
-		case VALOR_CONSTANT_Long:
+		case CONSTANT_Long:
 			strcpy(nometag,"CONSTANT_Long_Info");
 			break;
-		case VALOR_CONSTANT_Double:
+		case CONSTANT_Double:
 			strcpy(nometag,"CONSTANT_Double_Info");
 			break;
-		case VALOR_CONSTANT_NameAndType:
+		case CONSTANT_NameAndType:
 			strcpy(nometag,"CONSTANT_NameAndType_Info");
 			break;
-		case VALOR_CONSTANT_Utf8:
+		case CONSTANT_Utf8:
 			strcpy(nometag,"CONSTANT_Utf8_Info");
 			break;
-		case VALOR_CONSTANT_MethodHandle:
+		case CONSTANT_MethodHandle:
 			strcpy(nometag,"CONSTANT_MethodHandle_Info");
 			break;
-		case VALOR_CONSTANT_MethodType:
+		case CONSTANT_MethodType:
 			strcpy(nometag,"CONSTANT_MethodType_Info");
 			break;
-		case VALOR_CONSTANT_InvokeDynamic:
+		case CONSTANT_InvokeDynamic:
 			strcpy(nometag,"CONSTANT_InvokeDynamic_Info");
 			break;
 		default:
@@ -566,7 +566,7 @@ char* decodeInstructionOp(cp_info *cp,u2 index, u2 sizeCP){
 
 	if (index < sizeCP) {
 		switch(cp_aux->tag){
-			case VALOR_CONSTANT_Methodref:
+			case CONSTANT_Methodref:
 
 				stringNomeClasse = decodeNIeNT(cp,cp_aux->UnionCP.CONSTANT_Methodref.class_index,1);
 
@@ -583,7 +583,7 @@ char* decodeInstructionOp(cp_info *cp,u2 index, u2 sizeCP){
 				strcat(retorno,">");
 			break;
 
-			case VALOR_CONSTANT_Fieldref:
+			case CONSTANT_Fieldref:
 
 				stringNomeClasse = decodeNIeNT(cp,cp_aux->UnionCP.CONSTANT_Fieldref.class_index,1);
 				stringGeral = decodeNIeNT(cp,cp_aux->UnionCP.CONSTANT_Fieldref.name_and_type_index,2);
@@ -598,7 +598,7 @@ char* decodeInstructionOp(cp_info *cp,u2 index, u2 sizeCP){
 				strcat(retorno,">");
 			break;
 
-			case VALOR_CONSTANT_String:
+			case CONSTANT_String:
 
 				stringGeral = decodeNIeNT(cp,cp_aux->UnionCP.CONSTANT_String.string_index,3);
 
@@ -670,41 +670,41 @@ char* decodeAccessFlags(u2 flag){
 
 	while(flag){
 
-		if(flag>=SYNTHETIC){
-			flag-=SYNTHETIC;
+		if(flag>=ACC_SYNTHETIC){
+			flag-=ACC_SYNTHETIC;
 			strcat(retorno,"SYNTHETIC;");
 		}
-		if(flag>=TRANSIENT){
-			flag-=TRANSIENT;
+		if(flag>=ACC_TRANSIENT){
+			flag-=ACC_TRANSIENT;
 			strcat(retorno,"TRANSIENT;");
 		}
-		if(flag>=VOLATILE){
-			flag-=VOLATILE;
+		if(flag>=ACC_VOLATILE){
+			flag-=ACC_VOLATILE;
 			strcat(retorno,"VOLATILE;");
 		}
 
-		if(flag>=FINAL){
-			flag-=FINAL;
+		if(flag>=ACC_FINAL){
+			flag-=ACC_FINAL;
 			strcat(retorno,"FINAL;");
 		}
 
-		if(flag>=STATIC){
-			flag-=STATIC;
+		if(flag>=ACC_STATIC){
+			flag-=ACC_STATIC;
 			strcat(retorno,"STATIC;");
 		}
 
-		if(flag>=PROTECTED){
-			flag-=PROTECTED;
+		if(flag>=ACC_PROTECTED){
+			flag-=ACC_PROTECTED;
 			strcat(retorno,"PROTECTED;");
 		}
 
-		if(flag>=PRIVATE){
-			flag-=PRIVATE;
+		if(flag>=ACC_PRIVATE){
+			flag-=ACC_PRIVATE;
 			strcat(retorno,"PRIVATE;");
 		}
 
-		if(flag>=PUBLIC){
-			flag-=PUBLIC;
+		if(flag>=ACC_PUBLIC){
+			flag-=ACC_PUBLIC;
 			strcat(retorno,"PUBLIC;");
 		}
 	}
@@ -801,7 +801,7 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 	// u1 * auxBytesCode;
 	char *ponteiroprint;
 
-	instrucao *instrucoes = construirInstrucoes();
+	instruction *instrucoes = InstructionBuild();
 
 	fprintf(fp, "\n     General Information     \n\n");
 //	fprintf(fp, "Magic: %08x\n",classfile->magic);
@@ -823,59 +823,59 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 		fprintf(fp, ">>> [%02d] %s\n",contador,searchNameTag(aux->tag));
 		contador++;
 		switch(aux->tag) {
-			case VALOR_CONSTANT_Class:
+			case CONSTANT_Class:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_Class.name_index,4);
 				fprintf(fp, "Class Name:	cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_Class.name_index,ponteiroprint);
 				break;
-			case VALOR_CONSTANT_Fieldref:
+			case CONSTANT_Fieldref:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_Fieldref.class_index,1);
 				fprintf(fp, "Class Name:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_Fieldref.class_index,ponteiroprint);
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_Fieldref.name_and_type_index,2);
 				fprintf(fp, "Name and Type:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_Fieldref.name_and_type_index,ponteiroprint);
 				break;
-			case VALOR_CONSTANT_Methodref:
+			case CONSTANT_Methodref:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_Methodref.class_index,1);
 				fprintf(fp, "Class Name:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_Methodref.class_index,ponteiroprint);
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_Methodref.name_and_type_index,2);
 				fprintf(fp, "Name and Type:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_Methodref.name_and_type_index,ponteiroprint);
 				break;
-			case VALOR_CONSTANT_InterfaceMethodref:
+			case CONSTANT_InterfaceMethodref:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_String.string_index,1);
 				fprintf(fp, "Class Name:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_InterfaceMethodref.class_index, ponteiroprint);
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_String.string_index,2);
 				fprintf(fp, "Name and Type Index:	cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_InterfaceMethodref.name_and_type_index, ponteiroprint);
 				break;
-			case VALOR_CONSTANT_String:
+			case CONSTANT_String:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_String.string_index,3);
 				fprintf(fp, "String:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_String.string_index,ponteiroprint);
 				break;
-			case VALOR_CONSTANT_Integer:
+			case CONSTANT_Integer:
 				fprintf(fp, "Bytes:		%04x\n",aux->UnionCP.CONSTANT_Integer.bytes);
 				fprintf(fp,"Integer:		%d\n",aux->UnionCP.CONSTANT_Integer.bytes);
 				break;
-			case VALOR_CONSTANT_Float:
+			case CONSTANT_Float:
 				fprintf(fp, "Bytes:		%04x\n",aux->UnionCP.CONSTANT_Float.bytes);
 				fprintf(fp, "Float:		%d\n",aux->UnionCP.CONSTANT_Float.bytes);
 				break;
-			case VALOR_CONSTANT_Long:
+			case CONSTANT_Long:
 				longValue = decodeLongInfo(aux);
 				fprintf(fp, "Long High Bytes:	0x%08x\n",aux->UnionCP.CONSTANT_Long.high_bytes);
 				fprintf(fp, "Long Low Bytes:		0x%08x\n",aux->UnionCP.CONSTANT_Long.low_bytes);
 				fprintf(fp, "Long:			%lu\n",longValue);
 				break;
-			case VALOR_CONSTANT_Double:
+			case CONSTANT_Double:
 				valor = decodeDoubleInfo(aux);
 				fprintf(fp, "Double High Bytes:	0x%08x\n",aux->UnionCP.CONSTANT_Double.high_bytes);
 				fprintf(fp, "Double Low Bytes:	0x%08x\n",aux->UnionCP.CONSTANT_Double.low_bytes);
 				fprintf(fp, "Double:			%.2lf\n",valor);
 				break;
-			case VALOR_CONSTANT_NameAndType:
+			case CONSTANT_NameAndType:
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_NameAndType.name_index,5);
 				fprintf(fp, "Name:		cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_NameAndType.name_index,ponteiroprint);
 				ponteiroprint = decodeNIeNT(classfile->constant_pool,aux->UnionCP.CONSTANT_NameAndType.descriptor_index,6);
 				fprintf(fp, "Descriptor:	cp_info#%d <%s>\n",aux->UnionCP.CONSTANT_NameAndType.descriptor_index,ponteiroprint);
 				break;
-			case VALOR_CONSTANT_Utf8:
+			case CONSTANT_Utf8:
 				fprintf(fp, "Length of byte array:	%d\n",(int)aux->UnionCP.CONSTANT_UTF8.length);
 				fprintf(fp, "Length of string:	%d\n",(int)aux->UnionCP.CONSTANT_UTF8.length);
 				fprintf(fp, "String:			");
@@ -884,14 +884,14 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 				}
 				fprintf(fp, "\n");
 				break;
-			case VALOR_CONSTANT_MethodHandle:
+			case CONSTANT_MethodHandle:
 				fprintf(fp, "MethodHandle Reference Kind: 	%02x\n",aux->UnionCP.CONSTANT_MethodHandle.reference_kind);
 				fprintf(fp, "MethodHandle Reference Index: 	%04x\n",aux->UnionCP.CONSTANT_MethodHandle.reference_index);
 				break;
-			case VALOR_CONSTANT_MethodType:
+			case CONSTANT_MethodType:
 				fprintf(fp, "MethodType Descriptor Index: 	%04x\n",aux->UnionCP.CONSTANT_MethodType.descriptor_index);
 				break;
-			case VALOR_CONSTANT_InvokeDynamic:
+			case CONSTANT_InvokeDynamic:
 				fprintf(fp, "InvokeDynamic - Bootstrap Method Attr Index: 	%04x\n",aux->UnionCP.CONSTANT_InvokeDynamicInfo.bootstrap_method_attr_index);
 				fprintf(fp, "InvokeDynamic - Name and Type Index: 			%04x\n",aux->UnionCP.CONSTANT_InvokeDynamicInfo.name_and_type_index);
 				break;

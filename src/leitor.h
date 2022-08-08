@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "estruturas.h"
 #include "classFile.h"
-#include "instrucoes.h"
+#include "instructions.h"
 
 /* Assinatura dos métodos */
 u1 u1Read(FILE *fp);                                                                // Lê um byte do arquivo e retorna o u1 
@@ -17,7 +17,7 @@ ClassFile * readFile(char *);                                                   
 cp_info * readConstantPool(FILE * fp, u2 constantpoolcount);                        // Lê a constant pool do .class
 method_info * readMethod(FILE * fp, u2 methodscount, cp_info *cp);                  // Lê o método de uma classe
 char* decodeInstructionOp(cp_info *cp, u2 index, u2 sizeCP);                        // Decodifica os argumentos de uma instrução
-char* decodeCode(cp_info *cp,u2 sizeCP,u1 *code, u4 length,instrucao *instrucoes);  // Decodifica o código do método
+char* decodeCode(cp_info *cp,u2 sizeCP,u1 *code, u4 length,instruction *instrucoes);  // Decodifica o código do método
 field_info * readField(FILE * fp, u2 fields_count, cp_info * cp);
 u2 * readInterfaces(FILE * fp, u2 size);
 innerClasses_attribute * readInnerClasses(FILE * fp, cp_info * cp);
