@@ -7,9 +7,15 @@
 
       $make
     
-    >>>Para carregar o programa desejado, basta digitar
+    >>>Para carregar o programa desejado no Linux, basta digitar
 
       $ ./a.out arquivo.class
+
+      //Arquivo = "se refere aos nomes dos arquivos .class que serao carregados para ler e serem exibidos"
+    
+    >>>Para carregar o programa desejado no Windows, basta digitar
+
+      $ ./a.exe arquivo.class
 
       //Arquivo = "se refere aos nomes dos arquivos .class que serao carregados para ler e serem exibidos"
 
