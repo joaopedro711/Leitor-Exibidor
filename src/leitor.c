@@ -6,41 +6,27 @@
 
 
 u1 u1Read(FILE *fp){
-u1 destiny;
-	if (fread(&destiny,sizeof(u1),1,fp) != 1) {
-		return MAX_U1;
-	} else {
-		return destiny;
-	}
+    u1 byte;
+    fread(&byte, 1, 1, fp);
+    if (feof(fp)) {
+        fprintf(stderr, "[ERROR]: ClassFormatError\n");
+        exit(EXIT_FAILURE);
+    }
+    return byte;
 }
 
 u2 u2Read(FILE *fp){
-u2 destiny;
-u1 lowByte, highByte;
-highByte = u1Read(fp);
-lowByte = u1Read(fp);
-
-if(highByte != MAX_U1 && lowByte != MAX_U1) {
-		destiny = ((highByte)<<8) | ((lowByte));
-		return destiny;
-	} else {
-		return MAX_U2;
-	}
+    uint16_t byte2;
+    byte2 = u1Read(fp);
+    byte2 = (byte2 << 8) | u1Read(fp);
+    return byte2;
 }
 
 u4 u4Read(FILE *fp){
-	u4 destiny;
-	u1 byteZero, byteUm, byteDois, byteTres;
-	byteTres = u1Read(fp);
-	byteDois = u1Read(fp);
-	byteUm = u1Read(fp);
-	byteZero = u1Read(fp);
-	if(byteTres != MAX_U1 && byteDois != MAX_U1 && byteUm != MAX_U1 && byteZero != MAX_U1){
-		destiny = ((byteTres)<<24) | ((byteDois)<<16) | ((byteUm)<<8) | ((byteZero));
-	return destiny;
-	} else {
-		return MAX_U4;
-	}
+    uint32_t byte4;
+    byte4 = u2Read(fp);
+    byte4 = (byte4 << 16) | u2Read(fp);
+    return byte4;
 }
 ClassFile* readFile (char * filename) {
 	ClassFile *classfile = NULL;
@@ -88,7 +74,13 @@ ClassFile* readFile (char * filename) {
 		return classfile;
 	}
 }
-
+//	As instruções da Java Virtual Machine não dependem do layout de tempo de execução de classes,
+//	interfaces, instâncias de classe ou arrays.
+// 	Em vez disso, as instruções referem-se a informações simbólicas na tabela constant_pool.
+//	Abaixo temos a função para leitura da tabela constant pool, que funciona da seguinte forma:
+//	o valor armazenado em aux->tag (do tipo cp_info) é referenciado pela tabela de estruturas no
+// 	arquivo estruturas.h e armazena o valor em seu respectivo lugar utilizando a função de leitura
+//	podendo ser de 2 bytes ou 4 bytes, dependendo da tag.
 cp_info * readConstantPool (FILE * fp, u2 constant_pool_count) {
 	cp_info * readConstantPool = (cp_info *) malloc((constant_pool_count-1)*sizeof(cp_info));
 	cp_info * aux = NULL;
@@ -803,7 +795,7 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 
 	instruction *instrucoes = InstructionBuild();
 
-	fprintf(fp, "\n     General Information     \n\n");
+	fprintf(fp, "\n   --------------------  General Information    -------------------- \n\n");
 //	fprintf(fp, "Magic: %08x\n",classfile->magic);
 	fprintf(fp, "Minor Version: 		%d\n",classfile->minor_version);
 	fprintf(fp, "Major Version: 		%d\n",classfile->major_version);
@@ -817,7 +809,7 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 	fprintf(fp, "Atributes Count: 	%d\n",classfile->attributes_count);
 
 
-	fprintf(fp, "\n\n     Constant Pool     \n\n");
+	fprintf(fp, "\n\n   --------------------  Constant Pool   --------------------  \n\n");
 
 	for (aux = classfile->constant_pool; aux < classfile->constant_pool+classfile->constant_pool_count-1; aux++) {
 		fprintf(fp, ">>> [%02d] %s\n",contador,searchNameTag(aux->tag));
@@ -902,14 +894,14 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 		printf("\n");
 	}
 
-	fprintf(fp, "\n\n     Interfaces     \n\n");
+	fprintf(fp, "\n\n   --------------------  Interfaces     --------------------\n\n");
 	contador = 0;
 	for (u2 * auxInterfaces = classfile->interfaces; auxInterfaces < classfile->interfaces+classfile->interfaces_count; auxInterfaces++) {
 		ponteiroprint = decodeNIeNT(classfile->constant_pool,*auxInterfaces,1);
 		fprintf(fp, "Interface: 				cp_info#%d <%s>\n",*auxInterfaces, ponteiroprint);
 	}
 
-	fprintf(fp, "\n\n     Fields     \n\n");
+	fprintf(fp, "\n\n   --------------------  Fields   --------------------  \n\n");
 	contador = 0;
 	for (auxField = classfile->fields; auxField < classfile->fields + classfile->fields_count; auxField++,contador++) {
 		fprintf(fp, ">>> [%d] Field \n",contador);
@@ -959,7 +951,7 @@ void printClassFile (ClassFile * classfile, FILE* fp) {
 		}
 		}
 
-	fprintf(fp, "\n\n     Methods     \n\n");
+	fprintf(fp, "\n\n   --------------------   Methods    -------------------- \n\n");
 
 	contador = 0;
 

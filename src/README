@@ -1,10 +1,18 @@
-**********RODAR O PROGRAMA**********
+**********Instrucoes para RODAR O PROGRAMA**********
 
-->No terminal insira os seguintes comandos:
+->No terminal, basta inserir os seguintes comandos:
 
 
     >>>PARA COMPILAR O PROGRAMA 
 
       $make
+    
+    >>>Para carregar o programa desejado, basta digitar
 
-  
+      $ ./a.out arquivo.class
+
+      //Arquivo = "se refere aos nomes dos arquivos .class que serao carregados para ler e serem exibidos"
+
+    >>>Qual o nome para o arquivo = "por sugestao colocar o mesmo nome do arquivo .class, porem sem '.class'"
+
+      $ arquivo  
